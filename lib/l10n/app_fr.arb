@@ -1,0 +1,31 @@
+{
+    "helloWorld": "Salut le monde !",
+    "@helloWorld": {
+      "description": "Bienvenu à toi développeur !"
+    },
+    "routeSettings": "Paramètres",
+    "nFavorites": "{count, plural, =0{Aucun incident n'a été déclaré encore.} =1{Tu as déclaré 1 incident.} other{Tu as {count} incidents déclatés.}}",
+    "@nFavorites": {
+        "description": "A plural message",
+        "placeholders": {
+            "count": {
+            "type": "num",
+            "format": "compact"
+            }
+        }
+    },
+
+    "appbar_menu_account": "Mon compte",
+    "appbar_menu_logout": "Se déconnecter",
+    "appbar_menu_language": "Langues",
+    "appbar_menu_themes": "Thèmes",
+
+    "language_dialog_title": "Choix de la langue",
+    "language_fr": "Français",
+    "language_en": "Anglais",
+
+    "theme_dialog_title": "Appliquer le thème",
+    "theme_system": "Système",
+    "theme_light": "Clair",
+    "theme_dark": "Sombre"
+}

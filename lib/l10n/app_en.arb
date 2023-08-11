@@ -1,0 +1,30 @@
+{
+    "helloWorld": "Hello World!",
+    "@helloWorld": {
+      "description": "The conventional newborn programmer greeting"
+    },
+    "routeSettings": "Settings",
+    "nFavorites": "{count, plural, =0{No favorites yet.} =1{You have 1 favorite.} other{You have {count} favorites.}}",
+    "@nFavorites": {
+        "description": "A plural message",
+        "placeholders": {
+            "count": {
+            "type": "num",
+            "format": "compact"
+            }
+        }
+    },
+    "appbar_menu_account": "My account",
+    "appbar_menu_logout": "Logout",
+    "appbar_menu_language": "Languages",
+    "appbar_menu_themes": "Themes",
+
+    "language_dialog_title": "Choose a language",
+    "language_fr": "French",
+    "language_en": "English",
+
+    "theme_dialog_title": "Apply the theme",
+    "theme_system": "System",
+    "theme_light": "Light",
+    "theme_dark": "Dark"
+}

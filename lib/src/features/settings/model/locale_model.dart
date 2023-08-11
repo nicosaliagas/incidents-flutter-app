@@ -1,0 +1,1 @@
+enum LocaleEnum { en, fr }
