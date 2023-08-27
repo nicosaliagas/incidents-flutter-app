@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:my_app/src/features/new_incident/api/category_api.dart';
 import 'package:my_app/src/features/new_incident/models/category.dart';
-import 'package:my_app/src/features/new_incident/widgets/new_incident_form.dart';
 import 'package:my_app/src/features/settings/model/locale_model.dart';
 import 'package:my_app/src/features/incidents/models/incident_model.dart';
 import 'package:my_app/src/features/incidents/widgets/incident.dart';
@@ -70,14 +69,29 @@ class _IncidentsState extends State<NewIncident> {
           future: futureCategories,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return NewIncidentForm(
-                  categories: snapshot.data!,
-                  datas: selectedCategory!,
-                  onDateTimeChanged: (newDateTime) {
-                    setState(() {
-                      selectedCategory = newDateTime;
-                    });
+              // TODO: le sortir dans un fichier widget
+              return DropdownButton<int>(
+                // Initial Value
+                value: selectedCategory,
+
+                // Down Arrow Icon
+                icon: const Icon(Icons.keyboard_arrow_down),
+
+                // Array list of items
+                items: snapshot.data!.map((Category category) {
+                  return DropdownMenuItem(
+                    value: category.id,
+                    child: Text(category.name),
+                  );
+                }).toList(),
+                // After selecting the desired option,it will
+                // change button value to selected value
+                onChanged: (int? newValue) {
+                  setState(() {
+                    selectedCategory = newValue!;
                   });
+                },
+              );
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }
