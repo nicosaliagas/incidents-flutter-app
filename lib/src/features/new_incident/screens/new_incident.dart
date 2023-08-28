@@ -16,6 +16,7 @@ class NewIncident extends StatefulWidget {
   State<NewIncident> createState() => _IncidentsState();
 }
 
+// TODO: Sortir dans un fichier
 Future<List<Category>> fetchCategories() async {
   final response = await CategoryApi.getCategories();
 
@@ -33,20 +34,7 @@ Future<List<Category>> fetchCategories() async {
 }
 
 class _IncidentsState extends State<NewIncident> {
-  int? selectedCategory;
-  List<Category> categories = <Category>[];
   late Future<List<Category>> futureCategories;
-
-  _getCategories() {
-    CategoryApi.getCategories().then((response) {
-      setState(() {
-        Iterable list = json.decode(response.body);
-        categories = list.map((model) => Category.fromJson(model)).toList();
-
-        selectedCategory = categories.isNotEmpty ? categories.first.id : 1;
-      });
-    });
-  }
 
   @override
   initState() {
@@ -72,10 +60,9 @@ class _IncidentsState extends State<NewIncident> {
             if (snapshot.hasData) {
               return NewIncidentForm(
                   categories: snapshot.data!,
-                  datas: selectedCategory!,
-                  onDateTimeChanged: (newDateTime) {
+                  callbackWidget: (datas) {
                     setState(() {
-                      selectedCategory = newDateTime;
+                      print("Return from the widget $datas");
                     });
                   });
             } else if (snapshot.hasError) {

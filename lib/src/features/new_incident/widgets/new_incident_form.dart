@@ -6,50 +6,140 @@ import 'package:my_app/src/features/incidents/models/incident_model.dart';
 import 'package:my_app/src/features/incidents/widgets/detail_incident.dart';
 
 class NewIncidentForm extends StatefulWidget {
-  NewIncidentForm(
-      {super.key,
-      required this.categories,
-      this.datas = 1,
-      required this.onDateTimeChanged});
-
   final List<Category> categories;
-  final ValueChanged<int> onDateTimeChanged;
-  int datas = 1;
+  final ValueChanged<int> callbackWidget;
+
+  NewIncidentForm(
+      {super.key, required this.categories, required this.callbackWidget});
 
   @override
-  State<NewIncidentForm> createState() =>
-      _NewIncidentFormState(selectedCategory: this.datas);
+  State<NewIncidentForm> createState() => _NewIncidentFormState();
 }
 
 class _NewIncidentFormState extends State<NewIncidentForm> {
-  int selectedCategory;
+  int selectedCategory = 1;
 
-  _NewIncidentFormState({required this.selectedCategory});
+  _NewIncidentFormState();
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<int>(
-      // Initial Value
-      value: selectedCategory,
+    return Center(
+      child: ListView(
+          shrinkWrap: true,
+          padding: EdgeInsets.all(15.0),
+          children: <Widget>[
+            Center(
+                child: Card(
+                    elevation: 8.0,
+                    child: Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: Column(children: <Widget>[
+                          DropdownButton<int>(
+                            // Initial Value
+                            value: selectedCategory,
 
-      // Down Arrow Icon
-      icon: const Icon(Icons.keyboard_arrow_down),
+                            // Down Arrow Icon
+                            icon: const Icon(Icons.keyboard_arrow_down),
 
-      // Array list of items
-      items: widget.categories.map((Category category) {
-        return DropdownMenuItem(
-          value: category.id,
-          child: Text(category.name),
-        );
-      }).toList(),
-      // After selecting the desired option,it will
-      // change button value to selected value
-      onChanged: (int? newValue) {
-        setState(() {
-          selectedCategory = newValue!;
-          widget.onDateTimeChanged(selectedCategory);
-        });
-      },
+                            // Array list of items
+                            items: widget.categories.map((Category category) {
+                              return DropdownMenuItem(
+                                value: category.id,
+                                child: Text(category.name),
+                              );
+                            }).toList(),
+                            // After selecting the desired option,it will
+                            // change button value to selected value
+                            onChanged: (int? newValue) {
+                              setState(() {
+                                selectedCategory = newValue!;
+                                widget.callbackWidget(selectedCategory!);
+                              });
+                            },
+                          ),
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          TextField(
+                            decoration: InputDecoration(
+                              labelText: "Description",
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          TextField(
+                            decoration: InputDecoration(
+                              labelText: "Description",
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          TextField(
+                            decoration: InputDecoration(
+                              labelText: "Description",
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          TextField(
+                            decoration: InputDecoration(
+                              labelText: "Description",
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          TextField(
+                            decoration: InputDecoration(
+                              labelText: "Description",
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          TextField(
+                            decoration: InputDecoration(
+                              labelText: "Description",
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          TextField(
+                            decoration: InputDecoration(
+                              labelText: "Description",
+                            ),
+                          ),
+                          SizedBox(
+                            height: 15.0,
+                          ),
+                          TextField(
+                            decoration: InputDecoration(
+                              labelText: "Description",
+                            ),
+                          ),
+                          Material(
+                            borderRadius: BorderRadius.circular(30.0),
+                            elevation: 5.0,
+                            child: MaterialButton(
+                              onPressed: () => {},
+                              minWidth: 150.0,
+                              height: 50.0,
+                              color: Color(0xFF179CDF),
+                              child: Text(
+                                "VALIDER",
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          )
+                        ]))))
+          ]),
     );
   }
 }
