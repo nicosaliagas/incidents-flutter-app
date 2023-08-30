@@ -17,7 +17,7 @@ class NewIncident extends StatefulWidget {
 }
 
 // TODO: Sortir dans un fichier
-Future<List<Category>> fetchCategories() async {
+Future<List<Category>> fetchIncidentCategories() async {
   final response = await CategoryApi.getCategories();
 
   if (response.statusCode == 200) {
@@ -29,7 +29,7 @@ Future<List<Category>> fetchCategories() async {
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
-    throw Exception('Failed to load album');
+    throw Exception('Failed to load incident categories');
   }
 }
 
@@ -39,7 +39,7 @@ class _IncidentsState extends State<NewIncident> {
   @override
   initState() {
     super.initState();
-    futureCategories = fetchCategories();
+    futureCategories = fetchIncidentCategories();
   }
 
   @override

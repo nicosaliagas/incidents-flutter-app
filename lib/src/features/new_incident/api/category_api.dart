@@ -5,6 +5,6 @@ const baseUrl = "http://localhost:8080/api";
 
 class CategoryApi {
   static Future getCategories() {
-    return http.get(Uri.parse("$baseUrl/categories"));
+    return http.get(Uri.parse("$baseUrl/incident-categories"));
   }
 }

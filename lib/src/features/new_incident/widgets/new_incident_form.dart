@@ -21,9 +21,38 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
 
   _NewIncidentFormState();
 
+  var userIndentity = Row(
+    children: [
+      Expanded(
+        child: Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: TextField(
+            decoration: InputDecoration(
+              labelText: "Prénom",
+            ),
+          ),
+        ), // <-- Wrapped in Expanded.
+      ),
+      Expanded(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: TextField(
+            decoration: InputDecoration(
+              labelText: "Nom",
+            ),
+          ),
+        ), // <-- Wrapped in Expanded.
+      )
+    ],
+  );
+
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Center(
+        child: Form(
+      key: _formKey,
       child: ListView(
           shrinkWrap: true,
           padding: EdgeInsets.all(15.0),
@@ -68,9 +97,13 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                           SizedBox(
                             height: 15.0,
                           ),
+                          userIndentity,
+                          SizedBox(
+                            height: 15.0,
+                          ),
                           TextField(
                             decoration: InputDecoration(
-                              labelText: "Description",
+                              labelText: "Téléphone",
                             ),
                           ),
                           SizedBox(
@@ -78,48 +111,11 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                           ),
                           TextField(
                             decoration: InputDecoration(
-                              labelText: "Description",
+                              labelText: "Email",
                             ),
                           ),
                           SizedBox(
                             height: 15.0,
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Description",
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15.0,
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Description",
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15.0,
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Description",
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15.0,
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Description",
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15.0,
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Description",
-                            ),
                           ),
                           Material(
                             borderRadius: BorderRadius.circular(30.0),
@@ -140,6 +136,6 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                           )
                         ]))))
           ]),
-    );
+    ));
   }
 }
