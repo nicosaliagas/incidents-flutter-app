@@ -21,30 +21,71 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
 
   _NewIncidentFormState();
 
-  var userIndentity = Row(
-    children: [
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.only(right: 10.0),
-          child: TextField(
-            decoration: InputDecoration(
-              labelText: "Prénom",
+  static final TextEditingController emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    //TODO:  MARCHE PAS :'(
+    // emailController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  // TODO: exporter dans un fichier
+  var userForm = Column(children: <Widget>[
+    Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: "Prénom",
+              ),
             ),
           ),
-        ), // <-- Wrapped in Expanded.
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: "Nom",
+              ),
+            ),
+          ),
+        )
+      ],
+    ),
+    SizedBox(
+      height: 15.0,
+    ),
+    TextField(
+      decoration: InputDecoration(
+        labelText: "Téléphone",
       ),
-      Expanded(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 10.0),
-          child: TextField(
-            decoration: InputDecoration(
-              labelText: "Nom",
-            ),
-          ),
-        ), // <-- Wrapped in Expanded.
-      )
-    ],
-  );
+    ),
+    SizedBox(
+      height: 15.0,
+    ),
+    TextFormField(
+      controller: emailController,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "L'email est requis.";
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        labelText: "Email",
+      ),
+    )
+  ]);
 
   final _formKey = GlobalKey<FormState>();
 
@@ -97,25 +138,24 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                           SizedBox(
                             height: 15.0,
                           ),
-                          userIndentity,
+                          userForm,
                           SizedBox(
                             height: 15.0,
                           ),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Téléphone",
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15.0,
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Email",
-                            ),
-                          ),
-                          SizedBox(
-                            height: 15.0,
+                          ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                // If the form is valid, display a snackbar. In the real world,
+                                // you'd often call a server or save the information in a database.
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Processing Data')),
+                                );
+
+                                print("Datas : ${emailController.text}");
+                              }
+                            },
+                            child: Text('VALIDER'),
                           ),
                           Material(
                             borderRadius: BorderRadius.circular(30.0),
