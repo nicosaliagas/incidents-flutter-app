@@ -65,6 +65,10 @@ class _IncidentsState extends State<NewIncident> {
                       print("Return from the widget $datas");
 
                       Navigator.pop(context);
+
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              "Utilisateur n° $datas créé avec succès !")));
                     });
                   });
             } else if (snapshot.hasError) {

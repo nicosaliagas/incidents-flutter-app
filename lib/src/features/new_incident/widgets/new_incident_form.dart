@@ -173,9 +173,8 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                           ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                // If the form is valid, display a snackbar. In the real world,
-                                // you'd often call a server or save the information in a database.
-                                ScaffoldMessenger.of(context).showSnackBar(
+                                final snackBar =
+                                    ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text('Processing Data')),
                                 );
@@ -188,15 +187,8 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                                     phone: phoneController.text);
 
                                 postIncidentUser(user).then((User newUser) {
-                                  print(
-                                      "Nouvel utilisteur >> ${newUser.toJson()}");
-
+                                  snackBar.close();
                                   widget.callbackWidget(newUser.id);
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              "Utilisateur créé avec succès ${newUser.id}")));
                                 });
                               }
                             },
