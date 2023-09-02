@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:my_app/src/features/new_incident/api/user_api.dart';
 import 'package:my_app/src/features/new_incident/models/category.dart';
+import 'package:my_app/src/features/new_incident/models/user.dart';
 import 'package:my_app/src/features/settings/model/locale_model.dart';
 import 'package:my_app/src/features/incidents/models/incident_model.dart';
 import 'package:my_app/src/features/incidents/widgets/detail_incident.dart';
@@ -16,17 +20,37 @@ class NewIncidentForm extends StatefulWidget {
   State<NewIncidentForm> createState() => _NewIncidentFormState();
 }
 
+// TODO: Sortir dans un fichier
+Future<User> postIncidentUser(User datas) async {
+  final response = await UserApi.postUser(datas);
+
+  if (response.statusCode == 201) {
+    return User.fromJson(json.decode(response.body));
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to post user');
+  }
+}
+
 class _NewIncidentFormState extends State<NewIncidentForm> {
   int selectedCategory = 1;
 
   _NewIncidentFormState();
 
-  static final TextEditingController emailController = TextEditingController();
+  static TextEditingController descriptionController = TextEditingController();
+  static TextEditingController mailController = TextEditingController();
+  static TextEditingController phoneController = TextEditingController();
+  static TextEditingController firstNameController = TextEditingController();
+  static TextEditingController lastNameController = TextEditingController();
 
   @override
   void dispose() {
-    //TODO:  MARCHE PAS :'(
-    // emailController.dispose();
+    descriptionController.clear();
+    mailController.clear();
+    phoneController.clear();
+    firstNameController.clear();
+    lastNameController.clear();
 
     super.dispose();
   }
@@ -43,7 +67,8 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(right: 10.0),
-            child: TextField(
+            child: TextFormField(
+              controller: firstNameController,
               decoration: InputDecoration(
                 labelText: "Prénom",
               ),
@@ -53,7 +78,8 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(left: 10.0),
-            child: TextField(
+            child: TextFormField(
+              controller: lastNameController,
               decoration: InputDecoration(
                 labelText: "Nom",
               ),
@@ -65,7 +91,8 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
     SizedBox(
       height: 15.0,
     ),
-    TextField(
+    TextFormField(
+      controller: phoneController,
       decoration: InputDecoration(
         labelText: "Téléphone",
       ),
@@ -74,7 +101,7 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
       height: 15.0,
     ),
     TextFormField(
-      controller: emailController,
+      controller: mailController,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return "L'email est requis.";
@@ -130,7 +157,8 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                           SizedBox(
                             height: 15.0,
                           ),
-                          TextField(
+                          TextFormField(
+                            controller: descriptionController,
                             decoration: InputDecoration(
                               labelText: "Description",
                             ),
@@ -152,7 +180,24 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                                       content: Text('Processing Data')),
                                 );
 
-                                print("Datas : ${emailController.text}");
+                                User user = User(
+                                    id: -1,
+                                    firstName: firstNameController.text,
+                                    lastName: lastNameController.text,
+                                    mail: mailController.text,
+                                    phone: phoneController.text);
+
+                                postIncidentUser(user).then((User newUser) {
+                                  print(
+                                      "Nouvel utilisteur >> ${newUser.toJson()}");
+
+                                  widget.callbackWidget(newUser.id);
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              "Utilisateur créé avec succès ${newUser.id}")));
+                                });
                               }
                             },
                             child: Text('VALIDER'),

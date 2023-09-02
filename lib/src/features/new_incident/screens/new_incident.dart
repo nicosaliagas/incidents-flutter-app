@@ -63,6 +63,8 @@ class _IncidentsState extends State<NewIncident> {
                   callbackWidget: (datas) {
                     setState(() {
                       print("Return from the widget $datas");
+
+                      Navigator.pop(context);
                     });
                   });
             } else if (snapshot.hasError) {
