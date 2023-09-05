@@ -1,15 +1,9 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:my_app/src/features/new_incident/api/category_api.dart';
-import 'package:my_app/src/features/new_incident/models/category.dart';
+import 'package:my_app/src/core/api/category_api.dart';
+import 'package:my_app/src/core/model/category.dart';
 import 'package:my_app/src/features/new_incident/widgets/new_incident_form.dart';
-import 'package:my_app/src/features/settings/model/locale_model.dart';
-import 'package:my_app/src/features/incidents/models/incident_model.dart';
-import 'package:my_app/src/features/incidents/widgets/incident.dart';
-import 'package:http/http.dart' as http;
 
 class NewIncident extends StatefulWidget {
   @override

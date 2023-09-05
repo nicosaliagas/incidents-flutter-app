@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:my_app/src/features/new_incident/models/user.dart';
+import 'package:my_app/src/core/model/user.dart';
 
 const baseUrl = "http://localhost:8080/api";
 

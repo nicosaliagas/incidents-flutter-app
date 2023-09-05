@@ -1,13 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:my_app/src/features/new_incident/api/user_api.dart';
-import 'package:my_app/src/features/new_incident/models/category.dart';
-import 'package:my_app/src/features/new_incident/models/user.dart';
-import 'package:my_app/src/features/settings/model/locale_model.dart';
-import 'package:my_app/src/features/incidents/models/incident_model.dart';
-import 'package:my_app/src/features/incidents/widgets/detail_incident.dart';
+import 'package:my_app/src/core/api/user_api.dart';
+import 'package:my_app/src/core/model/category.dart';
+import 'package:my_app/src/core/model/user.dart';
+import 'package:my_app/src/core/repository/user_repository.dart';
+import 'package:my_app/src/features/new_incident/widgets/incident_user_form_part.dart';
 
 class NewIncidentForm extends StatefulWidget {
   final List<Category> categories;
@@ -20,23 +18,10 @@ class NewIncidentForm extends StatefulWidget {
   State<NewIncidentForm> createState() => _NewIncidentFormState();
 }
 
-// TODO: Sortir dans un fichier
-Future<User> postIncidentUser(User datas) async {
-  final response = await UserApi.postUser(datas);
-
-  if (response.statusCode == 201) {
-    return User.fromJson(json.decode(response.body));
-  } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to post user');
-  }
-}
-
 class _NewIncidentFormState extends State<NewIncidentForm> {
-  int selectedCategory = 1;
+  final UserRepository _userRepository = UserRepository();
 
-  _NewIncidentFormState();
+  int selectedCategory = 1;
 
   static TextEditingController descriptionController = TextEditingController();
   static TextEditingController mailController = TextEditingController();
@@ -59,60 +44,6 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
   void initState() {
     super.initState();
   }
-
-  // TODO: exporter dans un fichier
-  var userForm = Column(children: <Widget>[
-    Row(
-      children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: TextFormField(
-              controller: firstNameController,
-              decoration: InputDecoration(
-                labelText: "Prénom",
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 10.0),
-            child: TextFormField(
-              controller: lastNameController,
-              decoration: InputDecoration(
-                labelText: "Nom",
-              ),
-            ),
-          ),
-        )
-      ],
-    ),
-    SizedBox(
-      height: 15.0,
-    ),
-    TextFormField(
-      controller: phoneController,
-      decoration: InputDecoration(
-        labelText: "Téléphone",
-      ),
-    ),
-    SizedBox(
-      height: 15.0,
-    ),
-    TextFormField(
-      controller: mailController,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return "L'email est requis.";
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        labelText: "Email",
-      ),
-    )
-  ]);
 
   final _formKey = GlobalKey<FormState>();
 
@@ -166,7 +97,11 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                           SizedBox(
                             height: 15.0,
                           ),
-                          userForm,
+                          IncidentUserFormPart(
+                              firstNameController: firstNameController,
+                              lastNameController: lastNameController,
+                              mailController: mailController,
+                              phoneController: phoneController),
                           SizedBox(
                             height: 15.0,
                           ),
@@ -186,7 +121,9 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                                     mail: mailController.text,
                                     phone: phoneController.text);
 
-                                postIncidentUser(user).then((User newUser) {
+                                _userRepository
+                                    .postIncidentUser(user)
+                                    .then((User newUser) {
                                   snackBar.close();
                                   widget.callbackWidget(newUser.id);
                                 });
