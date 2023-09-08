@@ -4,7 +4,7 @@ import 'package:my_app/src/core/api/user_api.dart';
 import 'package:my_app/src/core/model/user.dart';
 
 class UserRepository {
-  Future<User> postIncidentUser(User datas) async {
+  Future<User> postUser(User datas) async {
     final response = await UserApi.postUser(datas);
 
     if (response.statusCode == 201) {

@@ -63,12 +63,11 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                         padding: EdgeInsets.all(10.0),
                         child: Column(children: <Widget>[
                           DropdownButton<int>(
+                            isExpanded: true,
                             // Initial Value
                             value: selectedCategory,
-
                             // Down Arrow Icon
                             icon: const Icon(Icons.keyboard_arrow_down),
-
                             // Array list of items
                             items: widget.categories.map((Category category) {
                               return DropdownMenuItem(
@@ -76,12 +75,9 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                                 child: Text(category.name),
                               );
                             }).toList(),
-                            // After selecting the desired option,it will
-                            // change button value to selected value
                             onChanged: (int? newValue) {
                               setState(() {
                                 selectedCategory = newValue!;
-                                widget.callbackWidget(selectedCategory!);
                               });
                             },
                           ),
@@ -122,32 +118,15 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                                     phone: phoneController.text);
 
                                 _userRepository
-                                    .postIncidentUser(user)
+                                    .postUser(user)
                                     .then((User newUser) {
                                   snackBar.close();
                                   widget.callbackWidget(newUser.id);
                                 });
                               }
                             },
-                            child: Text('VALIDER'),
+                            child: Text('VALIDER $selectedCategory'),
                           ),
-                          Material(
-                            borderRadius: BorderRadius.circular(30.0),
-                            elevation: 5.0,
-                            child: MaterialButton(
-                              onPressed: () => {},
-                              minWidth: 150.0,
-                              height: 50.0,
-                              color: Color(0xFF179CDF),
-                              child: Text(
-                                "VALIDER",
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          )
                         ]))))
           ]),
     ));

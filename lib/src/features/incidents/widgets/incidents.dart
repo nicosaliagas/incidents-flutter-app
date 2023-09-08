@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:my_app/src/features/settings/model/locale_model.dart';
-import 'package:my_app/src/core/model/incident_model.dart';
+import 'package:my_app/src/core/model/incident.dart';
 import 'package:my_app/src/features/incidents/widgets/incident.dart';
 
 class Incidents extends StatefulWidget {
@@ -14,11 +14,11 @@ class _IncidentsState extends State<Incidents> {
   Widget build(BuildContext context) {
     var incidents = <IncidentModel>[
       IncidentModel("Incident 1", DateTime.now(),
-          "61 avenue Maryse Bastié, 33520 BRUGES", "Dégradation"),
+          "61 avenue Maryse Bastié, 33520 BRUGES", 1),
       IncidentModel("Incident 2", DateTime.now(),
-          "32 avenue Maryse Bastié, 33520 BRUGES", "Dégradation"),
+          "32 avenue Maryse Bastié, 33520 BRUGES", 1),
       IncidentModel("Incident 3", DateTime.now(),
-          "44 avenue Maryse Bastié, 33520 BRUGES", "Dégradation"),
+          "44 avenue Maryse Bastié, 33520 BRUGES", 1),
     ];
 
     var listIncidents = <Widget>[];

@@ -29,7 +29,7 @@ ThemeData _buildTheme() {
     //textTheme: _textTheme(base.textTheme),
     // below text theme add this
     // Define styles for elevated button
-    //elevatedButtonTheme: _elevatedButtonTheme(base.elevatedButtonTheme),
+    elevatedButtonTheme: _elevatedButtonTheme(base.elevatedButtonTheme),
     scaffoldBackgroundColor: const Color(0xfffbfcfd),
     // Set Themes for Input Your homework
 
@@ -148,10 +148,8 @@ InputDecorationTheme _inputDecorationTheme(InputDecorationTheme base) =>
 
 ElevatedButtonThemeData _elevatedButtonTheme(ElevatedButtonThemeData base) =>
     ElevatedButtonThemeData(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(
-          const Color(0xFFfbfcfd),
-        ),
-        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 22),
+        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
       ),
     );
