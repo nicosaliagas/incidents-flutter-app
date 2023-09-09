@@ -61,8 +61,8 @@ class _IncidentsState extends State<NewIncident> {
                       Navigator.pop(context);
 
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              "Utilisateur n° $datas créé avec succès !")));
+                          content:
+                              Text("L'incident n° $datas créé avec succès !")));
                     });
                   });
             } else if (snapshot.hasError) {

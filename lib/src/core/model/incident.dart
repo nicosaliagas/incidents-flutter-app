@@ -1,22 +1,26 @@
+import 'dart:convert';
+
+import 'package:my_app/src/core/model/user.dart';
+
 class IncidentModel {
   final int id;
   final int category;
   final String description;
-  final int userId;
+  final User user;
 
   const IncidentModel({
     this.id = 0,
     required this.category,
     required this.description,
-    required this.userId,
+    required this.user,
   });
 
-  factory IncidentModel.fromJson(Map json) {
+  factory IncidentModel.fromJson(Map datas) {
     return IncidentModel(
-      id: json['id'],
-      category: json['category'],
-      description: json['description'],
-      userId: json['userId'],
+      id: datas['id'],
+      category: datas['category'],
+      description: datas['description'],
+      user: User.fromJson(datas['user']),
     );
   }
 
@@ -25,7 +29,7 @@ class IncidentModel {
       'id': id,
       'category': category,
       'description': description,
-      'userId': userId,
+      'user': user,
     };
   }
 }

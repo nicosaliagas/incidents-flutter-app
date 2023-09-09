@@ -13,12 +13,12 @@ class _IncidentsState extends State<Incidents> {
   @override
   Widget build(BuildContext context) {
     var incidents = <IncidentModel>[
-      IncidentModel("Incident 1", DateTime.now(),
-          "61 avenue Maryse Bastié, 33520 BRUGES", 1),
-      IncidentModel("Incident 2", DateTime.now(),
-          "32 avenue Maryse Bastié, 33520 BRUGES", 1),
-      IncidentModel("Incident 3", DateTime.now(),
-          "44 avenue Maryse Bastié, 33520 BRUGES", 1),
+      /*IncidentModel(
+          category: 1, description: "Description de dingue", user: 1),
+      IncidentModel(
+          category: 1, description: "Description de dingue 2", user: 1),
+      IncidentModel(
+          category: 1, description: "Description de dingue 3", user: 1),*/
     ];
 
     var listIncidents = <Widget>[];

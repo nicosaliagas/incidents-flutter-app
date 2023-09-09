@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:my_app/src/core/api/user_api.dart';
 import 'package:my_app/src/core/model/category.dart';
+import 'package:my_app/src/core/model/incident.dart';
 import 'package:my_app/src/core/model/user.dart';
+import 'package:my_app/src/core/repository/incident_repository.dart';
 import 'package:my_app/src/core/repository/user_repository.dart';
 import 'package:my_app/src/features/new_incident/widgets/incident_user_form_part.dart';
 
@@ -20,6 +22,7 @@ class NewIncidentForm extends StatefulWidget {
 
 class _NewIncidentFormState extends State<NewIncidentForm> {
   final UserRepository _userRepository = UserRepository();
+  final IncidentRepository _incidentRepository = IncidentRepository();
 
   int selectedCategory = 1;
 
@@ -110,6 +113,7 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                                       content: Text('Processing Data')),
                                 );
 
+                                /** Définition de l'utilisateur */
                                 User user = User(
                                     id: -1,
                                     firstName: firstNameController.text,
@@ -117,11 +121,24 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                                     mail: mailController.text,
                                     phone: phoneController.text);
 
+                                /** Création de l'utilisateur */
                                 _userRepository
                                     .postUser(user)
                                     .then((User newUser) {
-                                  snackBar.close();
-                                  widget.callbackWidget(newUser.id);
+                                  IncidentModel incident = IncidentModel(
+                                      category: selectedCategory,
+                                      description: descriptionController.text,
+                                      user: newUser);
+
+                                  _incidentRepository
+                                      .postIncident(incident)
+                                      .then((IncidentModel newIncident) {
+                                    snackBar.close();
+
+                                    print("Nouvel incident créé $newIncident");
+
+                                    widget.callbackWidget(newIncident.id);
+                                  });
                                 });
                               }
                             },
