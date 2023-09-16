@@ -105,7 +105,7 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                             height: 15.0,
                           ),
                           ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 final snackBar =
                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -121,12 +121,36 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                                     mail: mailController.text,
                                     phone: phoneController.text);
 
+                                Category category =
+                                    Category(id: selectedCategory, name: '');
+
                                 /** Création de l'utilisateur */
-                                _userRepository
+                                try {
+                                  User newUser =
+                                      await _userRepository.postUser(user);
+
+                                  /** Nouvel incident */
+                                  IncidentModel incident = IncidentModel(
+                                      category: category,
+                                      description: descriptionController.text,
+                                      user: newUser);
+
+                                  IncidentModel newIncident =
+                                      await _incidentRepository
+                                          .postIncident(incident);
+
+                                  snackBar.close();
+                                  widget.callbackWidget(newIncident.id);
+                                } catch (e) {
+                                  // Gestion des erreurs de connexion ou autres erreurs
+                                  print('Erreur lors de la requête HTTP: $e');
+                                }
+
+                                /*_userRepository
                                     .postUser(user)
                                     .then((User newUser) {
                                   IncidentModel incident = IncidentModel(
-                                      category: selectedCategory,
+                                      category: category,
                                       description: descriptionController.text,
                                       user: newUser);
 
@@ -135,14 +159,12 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                                       .then((IncidentModel newIncident) {
                                     snackBar.close();
 
-                                    print("Nouvel incident créé $newIncident");
-
                                     widget.callbackWidget(newIncident.id);
                                   });
-                                });
+                                });*/
                               }
                             },
-                            child: Text('VALIDER $selectedCategory'),
+                            child: Text('VALIDER'),
                           ),
                         ]))))
           ]),

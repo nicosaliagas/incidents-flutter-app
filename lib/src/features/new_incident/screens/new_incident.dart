@@ -10,7 +10,6 @@ class NewIncident extends StatefulWidget {
   State<NewIncident> createState() => _IncidentsState();
 }
 
-// TODO: Sortir dans un fichier
 Future<List<Category>> fetchIncidentCategories() async {
   final response = await CategoryApi.getCategories();
 

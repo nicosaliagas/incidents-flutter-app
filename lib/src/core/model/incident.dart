@@ -1,10 +1,11 @@
 import 'dart:convert';
 
+import 'package:my_app/src/core/model/category.dart';
 import 'package:my_app/src/core/model/user.dart';
 
 class IncidentModel {
   final int id;
-  final int category;
+  final Category category;
   final String description;
   final User user;
 
@@ -18,7 +19,7 @@ class IncidentModel {
   factory IncidentModel.fromJson(Map datas) {
     return IncidentModel(
       id: datas['id'],
-      category: datas['category'],
+      category: Category.fromJson(datas['category']),
       description: datas['description'],
       user: User.fromJson(datas['user']),
     );

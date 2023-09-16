@@ -10,9 +10,11 @@ class UserRepository {
     if (response.statusCode == 201) {
       return User.fromJson(json.decode(response.body));
     } else {
+      print('Erreur HTTP: ${response.body}');
+
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      throw Exception('Failed to post user');
+      throw Exception('Failed to post user ${response.body}');
     }
   }
 }
