@@ -26,6 +26,8 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
 
   int selectedCategory = 1;
 
+  User? newUser;
+
   static TextEditingController descriptionController = TextEditingController();
   static TextEditingController mailController = TextEditingController();
   static TextEditingController phoneController = TextEditingController();
@@ -125,26 +127,32 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                                     Category(id: selectedCategory, name: '');
 
                                 /** Création de l'utilisateur */
-                                try {
-                                  User newUser =
-                                      await _userRepository.postUser(user);
+                                Future<User> future =
+                                    _userRepository.postUser(user);
 
-                                  /** Nouvel incident */
-                                  IncidentModel incident = IncidentModel(
-                                      category: category,
-                                      description: descriptionController.text,
-                                      user: newUser);
+                                await future
+                                    .then((User newUser) =>
+                                        _handleUserLoaded(newUser))
+                                    .catchError(
+                                        (error) => _handleErrorUser(error));
 
-                                  IncidentModel newIncident =
-                                      await _incidentRepository
-                                          .postIncident(incident);
-
-                                  snackBar.close();
-                                  widget.callbackWidget(newIncident.id);
-                                } catch (e) {
-                                  // Gestion des erreurs de connexion ou autres erreurs
-                                  print('Erreur lors de la requête HTTP: $e');
+                                if (newUser != null) {
+                                  print(
+                                      "on va créer maintenant l'incident ! ${newUser!.mail}");
                                 }
+
+                                /** Nouvel incident */
+                                /*IncidentModel incident = IncidentModel(
+                                    category: category,
+                                    description: descriptionController.text,
+                                    user: newUser);
+
+                                IncidentModel newIncident =
+                                    await _incidentRepository
+                                        .postIncident(incident);
+
+                                snackBar.close();
+                                widget.callbackWidget(newIncident.id);*/
 
                                 /*_userRepository
                                     .postUser(user)
@@ -169,5 +177,19 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                         ]))))
           ]),
     ));
+  }
+
+  _handleUserLoaded(User user) {
+    setState(() {
+      newUser = user;
+    });
+  }
+
+  _handleErrorUser(errors) {
+    print("_handleErrorUser $errors");
+
+    errors.forEach((final String key, final value) {
+      print("Key: {{$key}} -> value: $value");
+    });
   }
 }
