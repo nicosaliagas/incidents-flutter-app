@@ -10,9 +10,7 @@ class IncidentRepository {
     if (response.statusCode == 201) {
       return IncidentModel.fromJson(json.decode(response.body));
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to post Incident');
+      throw json.decode(response.body);
     }
   }
 }

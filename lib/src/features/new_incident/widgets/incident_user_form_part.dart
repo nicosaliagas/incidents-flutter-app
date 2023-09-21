@@ -68,7 +68,7 @@ class _IncidentUserFormPartState extends State<IncidentUserFormPart> {
         controller: widget.mailController,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return "L'email est requis.";
+            return "Ce champ est requis.";
           }
           return null;
         },

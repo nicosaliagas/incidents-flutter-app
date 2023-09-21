@@ -27,6 +27,8 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
   int selectedCategory = 1;
 
   User? newUser;
+  IncidentModel? newIncident;
+  String errorMessages = "";
 
   static TextEditingController descriptionController = TextEditingController();
   static TextEditingController mailController = TextEditingController();
@@ -91,6 +93,12 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                           ),
                           TextFormField(
                             controller: descriptionController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Ce champ est requis.";
+                              }
+                              return null;
+                            },
                             decoration: InputDecoration(
                               labelText: "Description",
                             ),
@@ -127,69 +135,60 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                                     Category(id: selectedCategory, name: '');
 
                                 /** Création de l'utilisateur */
-                                Future<User> future =
-                                    _userRepository.postUser(user);
-
-                                await future
-                                    .then((User newUser) =>
-                                        _handleUserLoaded(newUser))
-                                    .catchError(
-                                        (error) => _handleErrorUser(error));
+                                try {
+                                  newUser =
+                                      await _userRepository.postUser(user);
+                                } catch (error) {
+                                  newUser = null;
+                                  _handleErrors(error);
+                                }
 
                                 if (newUser != null) {
                                   print(
-                                      "on va créer maintenant l'incident ! ${newUser!.mail}");
-                                }
+                                      "on va créer maintenant l'incident avec le mail utilisateur : ${newUser!.mail}");
 
-                                /** Nouvel incident */
-                                /*IncidentModel incident = IncidentModel(
-                                    category: category,
-                                    description: descriptionController.text,
-                                    user: newUser);
-
-                                IncidentModel newIncident =
-                                    await _incidentRepository
-                                        .postIncident(incident);
-
-                                snackBar.close();
-                                widget.callbackWidget(newIncident.id);*/
-
-                                /*_userRepository
-                                    .postUser(user)
-                                    .then((User newUser) {
+                                  /** Nouvel incident */
                                   IncidentModel incident = IncidentModel(
                                       category: category,
                                       description: descriptionController.text,
-                                      user: newUser);
+                                      user: newUser!);
 
-                                  _incidentRepository
-                                      .postIncident(incident)
-                                      .then((IncidentModel newIncident) {
+                                  try {
+                                    newIncident = await _incidentRepository
+                                        .postIncident(incident);
+
                                     snackBar.close();
+                                    widget.callbackWidget(newIncident!.id);
+                                  } catch (error) {
+                                    newIncident = null;
 
-                                    widget.callbackWidget(newIncident.id);
-                                  });
-                                });*/
+                                    _handleErrors(error);
+                                  }
+                                }
                               }
                             },
                             child: Text('VALIDER'),
                           ),
+                          Text(errorMessages)
                         ]))))
           ]),
     ));
   }
 
-  _handleUserLoaded(User user) {
-    setState(() {
-      newUser = user;
-    });
-  }
+  _handleErrors(errors) {
+    print("_handleError $errors");
 
-  _handleErrorUser(errors) {
-    print("_handleErrorUser $errors");
+    var errorSB = StringBuffer();
 
     errors.forEach((final String key, final value) {
       print("Key: {{$key}} -> value: $value");
+      errorSB.write("- $value \r\n");
+    });
+
+    print("messages >> $errorSB");
+
+    setState(() {
+      errorMessages = errorSB.toString();
     });
   }
 }
