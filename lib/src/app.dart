@@ -213,7 +213,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () => {
-            setState(() => log("Clique sur le bouton flotant !")),
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => NewIncident()),

@@ -117,54 +117,7 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
                           ElevatedButton(
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                final snackBar =
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Processing Data')),
-                                );
-
-                                /** Définition de l'utilisateur */
-                                User user = User(
-                                    id: -1,
-                                    firstName: firstNameController.text,
-                                    lastName: lastNameController.text,
-                                    mail: mailController.text,
-                                    phone: phoneController.text);
-
-                                Category category =
-                                    Category(id: selectedCategory, name: '');
-
-                                /** Création de l'utilisateur */
-                                try {
-                                  newUser =
-                                      await _userRepository.postUser(user);
-                                } catch (error) {
-                                  newUser = null;
-                                  _handleErrors(error);
-                                }
-
-                                if (newUser != null) {
-                                  print(
-                                      "on va créer maintenant l'incident avec le mail utilisateur : ${newUser!.mail}");
-
-                                  /** Nouvel incident */
-                                  IncidentModel incident = IncidentModel(
-                                      category: category,
-                                      description: descriptionController.text,
-                                      user: newUser!);
-
-                                  try {
-                                    newIncident = await _incidentRepository
-                                        .postIncident(incident);
-
-                                    snackBar.close();
-                                    widget.callbackWidget(newIncident!.id);
-                                  } catch (error) {
-                                    newIncident = null;
-
-                                    _handleErrors(error);
-                                  }
-                                }
+                                await _createUserIncident();
                               }
                             },
                             child: Text('VALIDER'),
@@ -175,20 +128,73 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
     ));
   }
 
-  _handleErrors(errors) {
-    print("_handleError $errors");
+  _createUserIncident() async {
+    final snackBar = ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Processing Data')),
+    );
 
+    /** Définition de l'utilisateur */
+    User user = User(
+        id: -1,
+        firstName: firstNameController.text,
+        lastName: lastNameController.text,
+        mail: mailController.text,
+        phone: phoneController.text);
+
+    /** On vérifie si le mail de l'utilisateur existe */
+    try {
+      User existedUser = await _userRepository.findUserByEmail(user.mail);
+
+      print("existedUser >> $existedUser");
+    } catch (error) {
+      _handleErrors(error);
+    }
+
+    /** Création de l'utilisateur */
+    try {
+      newUser = await _userRepository.postUser(user);
+    } catch (error) {
+      newUser = null;
+      _handleErrors(error);
+    }
+
+    if (newUser != null) {
+      Category category = Category(id: selectedCategory, name: '');
+
+      /** Nouvel incident */
+      IncidentModel incident = IncidentModel(
+          category: category,
+          description: descriptionController.text,
+          user: newUser!);
+
+      try {
+        newIncident = await _incidentRepository.postIncident(incident);
+
+        snackBar.close();
+        widget.callbackWidget(newIncident!.id);
+      } catch (error) {
+        newIncident = null;
+
+        _handleErrors(error);
+      }
+    }
+  }
+
+  _handleErrors(errors) {
     var errorSB = StringBuffer();
 
-    errors.forEach((final String key, final value) {
-      print("Key: {{$key}} -> value: $value");
-      errorSB.write("- $value \r\n");
-    });
+    if (errors is String) {
+      setState(() {
+        errorMessages = errors;
+      });
+    } else {
+      errors.forEach((final String key, final value) {
+        errorSB.write("- $value \r\n");
+      });
 
-    print("messages >> $errorSB");
-
-    setState(() {
-      errorMessages = errorSB.toString();
-    });
+      setState(() {
+        errorMessages = errorSB.toString();
+      });
+    }
   }
 }

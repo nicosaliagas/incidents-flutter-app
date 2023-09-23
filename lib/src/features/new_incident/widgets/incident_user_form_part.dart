@@ -73,7 +73,7 @@ class _IncidentUserFormPartState extends State<IncidentUserFormPart> {
           return null;
         },
         decoration: InputDecoration(
-          labelText: "Email",
+          labelText: "Email *",
         ),
       )
     ]);
