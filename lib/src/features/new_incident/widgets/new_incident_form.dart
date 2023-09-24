@@ -133,29 +133,36 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
       const SnackBar(content: Text('Processing Data')),
     );
 
-    /** Définition de l'utilisateur */
-    User user = User(
-        id: -1,
-        firstName: firstNameController.text,
-        lastName: lastNameController.text,
-        mail: mailController.text,
-        phone: phoneController.text);
+    User? existedUser;
 
-    /** On vérifie si le mail de l'utilisateur existe */
+    /** On vérifie si le compte utilisateur existe, en faisant une recherche par son mail */
     try {
-      User existedUser = await _userRepository.findUserByEmail(user.mail);
-
-      print("existedUser >> $existedUser");
+      existedUser = await _userRepository.findUserByEmail(mailController.text);
     } catch (error) {
       _handleErrors(error);
     }
 
-    /** Création de l'utilisateur */
-    try {
-      newUser = await _userRepository.postUser(user);
-    } catch (error) {
-      newUser = null;
-      _handleErrors(error);
+    if (existedUser != null) {
+      newUser = User(
+          id: existedUser.id,
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
+          mail: mailController.text,
+          phone: phoneController.text);
+      // TODO: faire l'update des données de l'USER
+      print("Utilisateur existant : todo : mettre à jour ses infos...");
+    } else {
+      /** Création de l'utilisateur */
+      try {
+        newUser = await _userRepository.postUser(User(
+            firstName: firstNameController.text,
+            lastName: lastNameController.text,
+            mail: mailController.text,
+            phone: phoneController.text));
+      } catch (error) {
+        newUser = null;
+        _handleErrors(error);
+      }
     }
 
     if (newUser != null) {

@@ -1,18 +1,23 @@
 import 'dart:convert';
 
+import 'package:my_app/config/constants/http_constant.dart';
 import 'package:my_app/src/core/api/user_api.dart';
 import 'package:my_app/src/core/model/user.dart';
 
 class UserRepository {
-  Future<User> findUserByEmail(String mail) async {
+  Future<User?> findUserByEmail(String mail) async {
     final response = await UserApi.findUserByMail(mail);
 
     // TODO: fichier de const
     // 200 : ok
     // 201 : created
 
-    if (response.statusCode == 200) {
-      return User.fromJson(json.decode(response.body));
+    if (response.statusCode == statusCode['HTTP_SUCCEED']) {
+      if (json.decode(response.body) != null) {
+        return User.fromJson(json.decode(response.body));
+      } else {
+        return null;
+      }
     } else {
       dynamic message;
 
