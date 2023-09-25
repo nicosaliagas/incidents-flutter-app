@@ -26,4 +26,16 @@ class UserApi {
       ),
     );
   }
+
+  static Future updateUser(User datas) {
+    return http.put(
+      Uri.parse("$baseUrl/users"),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        datas,
+      ),
+    );
+  }
 }

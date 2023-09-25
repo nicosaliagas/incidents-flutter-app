@@ -143,14 +143,17 @@ class _NewIncidentFormState extends State<NewIncidentForm> {
     }
 
     if (existedUser != null) {
-      newUser = User(
-          id: existedUser.id,
-          firstName: firstNameController.text,
-          lastName: lastNameController.text,
-          mail: mailController.text,
-          phone: phoneController.text);
-      // TODO: faire l'update des données de l'USER
-      print("Utilisateur existant : todo : mettre à jour ses infos...");
+      try {
+        newUser = await _userRepository.putUser(User(
+            id: existedUser.id,
+            firstName: firstNameController.text,
+            lastName: lastNameController.text,
+            mail: mailController.text,
+            phone: phoneController.text));
+      } catch (error) {
+        newUser = null;
+        _handleErrors(error);
+      }
     } else {
       /** Création de l'utilisateur */
       try {
