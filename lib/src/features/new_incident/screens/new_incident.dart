@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:my_app/src/core/api/category_api.dart';
 import 'package:my_app/src/core/model/category.dart';
+import 'package:my_app/src/core/repository/category_repository.dart';
 import 'package:my_app/src/features/new_incident/widgets/new_incident_form.dart';
 
 class NewIncident extends StatefulWidget {
@@ -10,29 +8,14 @@ class NewIncident extends StatefulWidget {
   State<NewIncident> createState() => _IncidentsState();
 }
 
-Future<List<Category>> fetchIncidentCategories() async {
-  final response = await CategoryApi.getCategories();
-
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-    Iterable list = json.decode(response.body);
-
-    return list.map((model) => Category.fromJson(model)).toList();
-  } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to load incident categories');
-  }
-}
-
 class _IncidentsState extends State<NewIncident> {
   late Future<List<Category>> futureCategories;
+  final CategoryRepository _categoryRepository = CategoryRepository();
 
   @override
   initState() {
     super.initState();
-    futureCategories = fetchIncidentCategories();
+    futureCategories = _categoryRepository.fetchIncidentCategories();
   }
 
   @override

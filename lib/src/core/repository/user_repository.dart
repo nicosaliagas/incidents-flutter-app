@@ -5,8 +5,10 @@ import 'package:my_app/src/core/api/user_api.dart';
 import 'package:my_app/src/core/model/user.dart';
 
 class UserRepository {
+  UserApi userApi = UserApi();
+
   Future<User?> findUserByEmail(String mail) async {
-    final response = await UserApi.findUserByMail(mail);
+    final response = await userApi.findUserByMail(mail);
 
     if (response.statusCode == statusCode['HTTP_SUCCEED']) {
       if (json.decode(response.body) != null) {
@@ -28,7 +30,7 @@ class UserRepository {
   }
 
   Future<User> postUser(User datas) async {
-    final response = await UserApi.postUser(datas);
+    final response = await userApi.postUser(datas);
 
     if (response.statusCode == statusCode['HTTP_CREATED']) {
       return User.fromJson(json.decode(response.body));
@@ -46,7 +48,7 @@ class UserRepository {
   }
 
   Future<User> putUser(User datas) async {
-    final response = await UserApi.updateUser(datas);
+    final response = await userApi.updateUser(datas);
 
     if (response.statusCode == statusCode['HTTP_SUCCEED']) {
       return User.fromJson(json.decode(response.body));
